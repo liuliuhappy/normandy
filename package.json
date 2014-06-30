@@ -1,0 +1,8 @@
+{
+  "name": "Normandy",
+  "version": "1.0.0",
+  "main": "main.js",
+  "dependencies": {
+    "nodemailer": "0.7.0"
+  }
+}

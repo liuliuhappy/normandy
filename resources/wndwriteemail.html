@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <title>Project codename Normandy 发邮件</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="bootstrap_3_0_3/css/bootstrap.css" rel="stylesheet">
+    <link href="bootstrap_3_0_3/css/bootstrap-theme.css" rel="stylesheet">
+</head>
+<body>
+<div class="row">
+
+    <div class="col-md-6">
+        <div class="jumbotron">
+            <h4><strong contenteditable="true">企业家精神</strong></h4>
+
+            <div class="information h6">
+                <p>收件人：<span contenteditable="true">点击编辑</span></p>
+
+                <p>抄送：<span contenteditable="true">点击添加</span></p>
+
+                <p>附件</p>
+            </div>
+            <p>
+                <section id="editable" contenteditable="true">
+                    <pre>
+    1904年，美国《企业家》杂志选用《常识》中的一段话作为发刊词。此后百余年中沧海桑田，物是人非，
+但杂志扉页上的这段话却从来没有改变，它被称为企业家誓言：
+
+我是不会选择做一个普通人的。
+如果我能够做到的话，我有权成为一位不寻常的人。
+我寻找机会，但我不寻求安稳，我不希望在国家的照顾下成为一名有保障的国民，那将被人瞧不起而使我感到痛苦不堪。
+我要做有意义的冒险。
+我要梦想，我要创造，我要失败，我也要成功。
+我拒绝用刺激来换取施舍；
+我宁愿向生活挑战，而不愿过有保证的生活；宁愿要达到目的时的激动，而不愿要乌托邦式毫无生气的平静。
+我不会拿我的自由与慈善作交易，也不会拿我的尊严去与发给乞丐的食物作交易。
+我决不会在任何一位大师面前发抖，也不会为任何恐吓所屈服。
+我的天性是挺胸直立，骄傲而无所畏惧。
+我勇敢地面对这个世界，自豪地说：
+在上帝的帮助下，我已经做到了。
+
+                    </pre>
+
+                </section>
+            </p>
+            <p class="center-block">
+            <button id="btn_writeemail" type="button" class="btn btn-success"><span
+                    class="glyphicon glyphicon-send"></span>发送
+            </button>
+            <button id="btn_writeemail" type="button" class="btn btn-info"><span
+                    class="glyphicon glyphicon-save"></span>保存
+            </button>
+            <button id="btn_writeemail" type="button" class="btn btn-danger"><span
+                    class="glyphicon glyphicon-remove"></span>丢弃
+            </button>
+            </p>
+        </div>
+
+
+    </div>
+</div>
+
+<script src="./jquery-2.1.1.min.js"></script>
+<script>
+    try {
+        $ = jQuery = module.exports;
+    } catch (e) {
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#fail-log').hide();
+        var ipc = require('ipc');
+
+        $('#btn_writeemail').click(function () {
+            ipc.send('openwndwriteemail', null);
+        });
+
+        $("#devtools").click(function () {
+            ipc.send('toggleDevTools');
+        });
+
+        ipc.on('response', function (message) {
+            $('#fail-log').hide();
+            $('#succ-log').show();
+            $('#succ-log').html(message.replace(/\n/g, "<br>"));
+        });
+        ipc.on('responseError', function (message) {
+            $('#succ-log').hide();
+            $('#fail-log').show();
+            var errorObj = message.error;
+            var errorText = 'error code: ' + errorObj.code + ', killed: ' + errorObj.killed + ', signal: ' + errorObj.signal;
+            $('#fail-log').text(errorText);
+
+            $('#fail-log').html($('#fail-log').html() + "<br>" + message.output.replace(/\n/g, "<br>"));
+        });
+    });
+</script>
+
+</body>
+</html>

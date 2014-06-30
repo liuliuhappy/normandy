@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <title>Project codename Normandy</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="bootstrap_3_0_3/css/bootstrap.css" rel="stylesheet">
+    <link href="bootstrap_3_0_3/css/bootstrap-theme.css" rel="stylesheet">
+</head>
+<body>
+<div class="row">
+    <div class="col-md-2">
+        <div class="list-group">
+
+            <span class="list-group-item">
+                <button id="btn_setting" type="button" class="btn btn-info"><span class="glyphicon glyphicon-dashboard"></span>菜单</button>
+                <button id="btn_writeemail" type="button" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span>写邮件</button>
+</span>
+            <a href="#" class="list-group-item"><span class="glyphicon glyphicon-inbox"></span>收件箱</a>
+            <a href="#" class="list-group-item active"><span class="glyphicon glyphicon-star"></span>星标邮件</a>
+            <a href="#" class="list-group-item"><span class="glyphicon glyphicon-file"></span>草稿箱</a>
+            <a href="#" class="list-group-item"><span class="glyphicon glyphicon-bookmark"></span>已发送</a>
+            <a href="#" class="list-group-item"><span class="glyphicon glyphicon-bookmark"></span>草稿箱</a>
+            <a href="#" class="list-group-item"><span class="glyphicon glyphicon-bookmark"></span>广告邮件</a>
+            <a href="#" class="list-group-item"><span class="glyphicon glyphicon-record"></span>订阅邮件</a>
+            <a href="#" class="list-group-item"><span class="glyphicon glyphicon-trash"></span>垃圾箱</a>
+        </div>
+        <div class="col-lg-4">
+            <p>
+                <button id="devtools" type="button" class="btn btn-xs"><span class="glyphicon glyphicon-exclamation-sign"></span>DEBUG</button>
+            </p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="list-group" style="height:100%">
+            <a href="#" class="list-group-item active">
+                <span class="date"><span class="glyphicon glyphicon-paperclip"></span> 6月19</span>
+                <h5 class="list-group-item-heading"><strong>Jack Chen 陈曦</strong></h5>
+
+                <p class="list-group-item-text">絶对要 加入！ and 9 others viewed your ...</p>
+            </a>
+            <a href="#" class="list-group-item">
+                <span class="date">6月18</span>
+                <h5 class="list-group-item-heading"><strong>Discuz! 应用中心</strong></h5>
+
+                <p class="list-group-item-text">[Discuz! 开放平台]邮箱修改请求</p>
+            </a>
+            <a href="#" class="list-group-item">
+                <span class="date">6月12</span>
+                <h5 class="list-group-item-heading"><strong>Jack Chen 陈曦</strong></h5>
+
+                <p class="list-group-item-text">絶对要 加入！ and 9 others viewed your ...</p>
+            </a>
+
+            <div class="zhanwei"><a href="#" class="list-group-item"></a></div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="jumbotron">
+            <h4><strong>[Discuz! 开放平台]邮箱修改请求</strong></h4>
+
+            <div class="information h6">
+                <p>发件人：Discuz! 应用中心<a>(DiscuzAddon@tencent.com)</a></p>
+
+                <p>收件人：sarah yao<a>(yaowenwen117@126.com)</a></p>
+
+                <p>时　间：2014年6月18日 9：08</p>
+            </div>
+            <p>尊敬的开发者“玩游戏日赚万元,点击www.s9u.org”：
+                您好！您刚刚申请重置 Discuz! 开放平台的电子邮箱，请点击以下链接修改电子邮箱：
+                <br><a>http://open.discuz.net/?ac=edit&anchor=basesetting&auth=b8143ckMsA4IEx
+                    8zFDxDgAtYzCuaN%2FaXxInNW14fMzw2BllyUoXNtw </a><br>
+
+                如果并非是您本人发起的邮箱修改请求，请忽略本邮件 <br>
+                （请勿答复此邮件）
+            </p>
+        </div>
+    </div>
+</div>
+
+<script src="./jquery-2.1.1.min.js"></script>
+<script>
+    try {
+        $ = jQuery = module.exports;
+    } catch (e) {
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#fail-log').hide();
+        var ipc = require('ipc');
+
+        $('#btn_writeemail').click(function () {
+            ipc.send('openwndwriteemail', null);
+        });
+
+        $("#devtools").click(function () {
+            ipc.send('toggleDevTools');
+        });
+
+        ipc.on('response', function (message) {
+            $('#fail-log').hide();
+            $('#succ-log').show();
+            $('#succ-log').html(message.replace(/\n/g, "<br>"));
+        });
+        ipc.on('responseError', function (message) {
+            $('#succ-log').hide();
+            $('#fail-log').show();
+            var errorObj = message.error;
+            var errorText = 'error code: ' + errorObj.code + ', killed: ' + errorObj.killed + ', signal: ' + errorObj.signal;
+            $('#fail-log').text(errorText);
+
+            $('#fail-log').html($('#fail-log').html() + "<br>" + message.output.replace(/\n/g, "<br>"));
+        });
+    });
+</script>
+<!--<script src="./bootstrap_3_1_1/js/bootstrap_3_1_1.min.js"></script>-->
+<!--<script src="http://cdn.bootcss.com/twitter-bootstrap_3_1_1/3.0.3/js/bootstrap_3_1_1.min.js"></script>-->
+</body>
+</html>
